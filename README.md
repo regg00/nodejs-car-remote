@@ -31,8 +31,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 All configuration is stored under the **config.json** file. Only change this file if you want to run the app quickly with minimal effort.
 
-1. Change the **secret**
-2. Change the **port**
+1. Change the **secret** (very important)
+2. Change the **port** (optional)
 3. Change the **gpioStart** and **gpioUnlock** values to reflect your current setup
 
 ### Installing requirements

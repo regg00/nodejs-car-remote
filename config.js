@@ -1,6 +1,6 @@
 // application configuration file
 module.exports = {
-    "secret": "8436198a-f4b6-4e81-a44b-2d220dc290c4",
+    "secret": "this need to be changed",
     "port": 3000,
     "gpioStart": 21,
     "gpioUnlock": 22
