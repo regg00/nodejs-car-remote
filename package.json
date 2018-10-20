@@ -1,0 +1,34 @@
+{
+  "name": "nodejs-car-remote",
+  "version": "1.0.0",
+  "description": "Simple NodeJS car remote API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/regg00/nodejs-car-remote.git"
+  },
+  "keywords": [
+    "car",
+    "remote",
+    "api",
+    "nodejs"
+  ],
+  "author": "Regis Tremblay Lefrancois",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/regg00/nodejs-car-remote/issues"
+  },
+  "homepage": "https://github.com/regg00/nodejs-car-remote#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
