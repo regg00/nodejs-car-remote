@@ -4,6 +4,18 @@ const app = express()
 const bodyParser = require("body-parser")
 const config = require("./config.js")
 const Gpio = require("onoff").Gpio
+const { createLogger, format, transports } = require('winston')
+const logger = createLogger({
+  level: 'debug',
+  format: format.combine(
+      format.colorize(),
+      format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss'
+      }),
+      format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+  ),    
+  transports: [new transports.Console()]
+})
 
 // initialize the relays and ensure that they are off
 var startRelay = new Gpio(config.gpioStart, 'out')
@@ -15,9 +27,10 @@ unlockRelay.writeSync(1)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+
 // test route
 app.get('/test', function (req, res){
-    console.log('test received')
+    logger.debug('test received')    
     res.send("ok")
 })
 
@@ -28,11 +41,11 @@ app.post('/start', function(req, res){
         // if valid, start the car by activating the GPIO pin connected to the start switch for 2 seconds
         // ensure that the relay is off
         startRelay.writeSync(1)
-        console.log('ensuring that the start relay is off')
+        logger.debug('set startRelay to 1')
 
         // turn on the relay
         startRelay.writeSync(0)
-        console.log('turning on the relay')
+        logger.debug('set startRelay to 0')
 
         // turn off after 2 seconds
         setTimeout(function(){
@@ -48,7 +61,7 @@ app.post('/start', function(req, res){
     else {        
         res.status(401);
         res.send("unauthorized")
-        console.log('unauthorized access attempt')
+        logger.warn('unauthorized access')
     }    
 })
 
@@ -58,7 +71,7 @@ app.post('/unlock', function(req, res){
     if (req.body.token == config.secret){   
         // ensure that the relay is off
         unlockRelay.writeSync(1)
-        console.log('ensuring that the unlock relay is off')
+        logger.debug('set unlockRelay to 1')
         
         // turn on the relay 2 times within 1 second
         setInterval(function(){            
@@ -78,14 +91,14 @@ app.post('/unlock', function(req, res){
 
         res.status(200)
         res.send("car unlocked")
-        console.log('car unlocked')
+        logger.info('car unlocked')
     }
 
     // if not valid, return error code
     else {        
         res.status(401);
         res.send("unauthorized")
-        console.log('unauthorized access attempt')
+        logger.warn('unauthorized access')
     }
     
 })
@@ -94,4 +107,4 @@ app.post('/unlock', function(req, res){
 app.listen(config.port)
 
 // write startup message to console
-console.log('car remote RESTful API server started on: ' + config.port)
+logger.info('car remote RESTful API server started on: ' + config.port)
