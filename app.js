@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require("body-parser")
-//const Gpio = require("onoff").Gpio
+const Gpio = require("onoff").Gpio
 const { createLogger, format, transports } = require('winston')
 
 const gpioStart = process.env.START || 24
