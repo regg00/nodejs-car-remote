@@ -8,7 +8,7 @@ const { createLogger, format, transports } = require('winston')
 const gpioStart = process.env.START || 24
 //const gpioUnlock = process.env.UNLOCK || 24
 const interval = process.env.INTERVAL || 3000
-const port = process.env.PORT || 80
+const port = process.env.PORT || 3000
 const secret = process.env.SECRET || "changethis"
 
 const logger = createLogger({
