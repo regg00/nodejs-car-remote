@@ -73,5 +73,5 @@ app.get('/start', function(req, res){
 
 // start the application
 app.listen(port, function(){
-    logger.info('car remote RESTful API server started on port: ' + port)
+    logger.info('car remote RESTful API server started on port: ' + port + '\r\nSecret: ' + secret)
 })
