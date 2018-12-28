@@ -6,7 +6,7 @@ const Gpio = require("onoff").Gpio
 const { createLogger, format, transports } = require('winston')
 
 const gpioStart = process.env.START || 24
-//const gpioUnlock = process.env.UNLOCK || 24
+const gpioUnlock = process.env.UNLOCK || 23
 const interval = process.env.INTERVAL || 3000
 const port = process.env.PORT || 3000
 const secret = process.env.SECRET || "changethis"
@@ -25,9 +25,9 @@ const logger = createLogger({
 
 // initialize the relays and ensure that they are off
 var startRelay = new Gpio(gpioStart, 'out')
-//var unlockRelay = new Gpio(gpioUnlock, 'out')
+var unlockRelay = new Gpio(gpioUnlock, 'out')
 startRelay.writeSync(1)
-//unlockRelay.writeSync(1)
+unlockRelay.writeSync(1)
 
 // configure the application to use body parser
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -61,6 +61,37 @@ app.get('/start', function(req, res){
         
         res.status(200)
         res.send("car started")
+    }
+    
+    // if the token is invalid, return error code
+    else {        
+        res.status(401);
+        res.send("unauthorized")
+        logger.warn('unauthorized access')
+    }    
+})
+
+// car unlock route
+app.get('/unlock', function(req, res){
+    // get token from post data and check if it's valid    
+    if (req.query.token == secret){
+        // if valid, start the car by activating the GPIO pin connected to the start switch for 2 seconds
+        // ensure that the relay is off
+        unlockRelay.writeSync(1)
+        logger.debug('set startRelay to 1')
+
+        // turn on the relay
+        unlockRelay.writeSync(0)
+        logger.debug('set startRelay to 0')
+
+        // turn off after x seconds
+        setTimeout(function(){
+            unlockRelay.writeSync(1)
+            console.log('turning off the relay after ' + interval + ' ms timeout')
+        },interval)
+        
+        res.status(200)
+        res.send("car unlocked")
     }
     
     // if the token is invalid, return error code
