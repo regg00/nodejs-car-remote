@@ -41,9 +41,9 @@ app.get('/healthcheck', function (req, res){
 })
 
 // car startup route
-app.post('/start', function(req, res){
+app.get('/start', function(req, res){
     // get token from post data and check if it's valid    
-    if (req.body.token == secret){
+    if (req.query.token == secret){
         // if valid, start the car by activating the GPIO pin connected to the start switch for 2 seconds
         // ensure that the relay is off
         startRelay.writeSync(1)
